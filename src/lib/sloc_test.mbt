@@ -185,3 +185,10 @@ test "to_bar: 占比条" {
   let empty = @lib.to_bar(@lib.count_lines("", @lib.moonbit()), 10)
   assert_eq(empty, "")
 }
+
+///|
+test "stats_to_json: 序列化" {
+  let s = @lib.count_lines("let x = 1", @lib.moonbit())
+  let j = @lib.stats_to_json(s)
+  assert_eq(j, "{ \"code\": 1, \"comment\": 0, \"blank\": 0, \"total\": 1 }")
+}

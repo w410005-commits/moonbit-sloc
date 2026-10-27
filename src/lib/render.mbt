@@ -66,3 +66,19 @@ pub fn to_bar(s : Stats, width : Int32) -> String {
   }
   sb.to_string()
 }
+
+///|
+///把统计结果序列化为 JSON 对象字符串，便于接入 CI 与其他工具链。
+pub fn stats_to_json(s : Stats) -> String {
+  let sb = StringBuilder()
+  sb.write_string("{ \"code\": ")
+  sb.write_string(s.code.to_string())
+  sb.write_string(", \"comment\": ")
+  sb.write_string(s.comment.to_string())
+  sb.write_string(", \"blank\": ")
+  sb.write_string(s.blank.to_string())
+  sb.write_string(", \"total\": ")
+  sb.write_string(s.total.to_string())
+  sb.write_string(" }")
+  sb.to_string()
+}

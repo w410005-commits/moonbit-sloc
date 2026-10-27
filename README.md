@@ -13,7 +13,8 @@ MoonBit 黑客松与开源大赛的评审以「有效代码行数」作为项目
 - **统计口径对齐 cloc**：行内既有代码又有注释时计为代码行；块注释内空行计为空行
 - **展示辅助**：内置 Markdown 汇总表与 ASCII 占比条渲染
 - **零依赖**：只依赖 `moonbitlang/core`，native / wasm / js 多后端可用
-- **测试完备**：16 项单元测试（黑盒 + 白盒）覆盖边界场景，GitHub Actions CI 全量验证
+- **JSON 输出**：`stats_to_json` 直接供 CI 与工具链消费
+- **测试完备**：21 项单元测试（黑盒 + 白盒）覆盖边界场景，GitHub Actions CI 全量验证
 
 ## 快速开始
 
@@ -28,6 +29,9 @@ println(stats.code)     // 代码行
 println(stats.comment)  // 注释行
 println(stats.blank)    // 空行
 println(stats.total)    // 总行数
+
+//序列化为 JSON，供 CI / 工具链消费
+let json = @sloc.stats_to_json(stats)
 
 //按扩展名自动识别语言
 let lang = @sloc.detect_ext("src/main.mbt") // Some(MoonBit)
