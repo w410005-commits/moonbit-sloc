@@ -13,6 +13,11 @@ fn main {
   // 按扩展名自动识别语言
   let detected = @lib.detect_ext("src/lib/scan.mbt")
 
+  // 按扩展名自动识别语言并统计
+  let sql_stats = @lib.count_lines_auto(
+    "SELECT a -- 注释\nFROM t", "query.sql",
+  )
+
   println("== 行统计示例 ==")
   println("MoonBit: code/comment/blank/total")
   println(mbt_stats.code)
@@ -41,6 +46,12 @@ fn main {
       println("scan.mbt ->")
       println(l.name)
     }
+    None => println("unknown")
+  }
+
+  println("== JSON 输出 ==")
+  match sql_stats {
+    Some(v) => println(@lib.stats_to_json(v))
     None => println("unknown")
   }
 }

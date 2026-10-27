@@ -1,3 +1,5 @@
+[![CI](https://github.com/w410005-commits/moonbit-sloc/actions/workflows/ci.yml/badge.svg)](https://github.com/w410005-commits/moonbit-sloc/actions/workflows/ci.yml)
+
 # moonbit-sloc
 
 多语言代码行数统计库：把源码行精确分类为**代码行 / 注释行 / 空行**，纯 MoonBit 实现、零第三方依赖。
