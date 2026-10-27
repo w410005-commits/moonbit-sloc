@@ -68,6 +68,34 @@ test "count_lines: 反引号模板串跨行" {
 }
 
 ///|
+test "count_lines: SQL 行注释与减法运算" {
+  let s = @lib.count_lines("SELECT a -- 查询注释\nFROM t", @lib.sql_lang())
+  assert_eq(s.code, 2)
+  assert_eq(s.comment, 0)
+  let d = @lib.count_lines(
+    "a - b -- 减法与注释\n-- 独立注释",
+    @lib.sql_lang(),
+  )
+  assert_eq(d.code, 1)
+  assert_eq(d.comment, 1)
+}
+
+///|
+test "count_lines: SQL 字符串内的 -- 不误判" {
+  let s = @lib.count_lines("'a--b' -- 真注释", @lib.sql_lang())
+  assert_eq(s.code, 1)
+  assert_eq(s.comment, 0)
+}
+
+///|
+test "count_lines: SQL 块注释" {
+  let src = "/* 说明 */ SELECT 1\nSELECT 2"
+  let s = @lib.count_lines(src, @lib.sql_lang())
+  assert_eq(s.code, 2)
+  assert_eq(s.comment, 0)
+}
+
+///|
 test "count_lines: 块注释内的空行计为空行" {
   let src = "/*\n\n*/\nlet x = 1"
   let s = @lib.count_lines(src, @lib.moonbit())

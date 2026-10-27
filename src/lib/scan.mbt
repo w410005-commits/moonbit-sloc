@@ -43,14 +43,15 @@ pub fn count_lines(src : String, lang : Lang) -> Stats {
   let mut esc = false
   let mut just_opened = false
   let mut has_any = false
-  // 斜杠挂起标志：Normal 状态下遇到 "/" 时先不判定为代码，
-  // 待下一个字符确认它是行/块注释的开头，还是普通代码字符（如除法）。
-  let mut pending_slash = false
+  // 注释起始符挂起：Normal 状态下遇到可能的注释起始字符（"/" 或 "-"）时，
+  // 先不判定为代码，待下一个字符确认它是注释开头，还是普通运算符（除法/减法）。
+  // 取值为 '\u{0}'（无挂起）、'/' 或 '-'。
+  let mut pending : Char = '\u{0}'
   for ch in src {
     has_any = true
     if ch == '\n' {
-      if pending_slash {
-        pending_slash = false
+      if pending != '\u{0}' {
+        pending = '\u{0}'
         seen_code = true
       }
       if esc {
@@ -79,12 +80,17 @@ pub fn count_lines(src : String, lang : Lang) -> Stats {
           // 空白字符
         } else if lang.slash_line && prev == '/' && ch == '/' {
           // 确认为行注释开头：挂起的斜杠不算代码
-          pending_slash = false
+          pending = '\u{0}'
+          state = InLineComment
+          seen_text = true
+        } else if lang.dash_line && prev == '-' && ch == '-' {
+          // 确认为行注释开头：挂起的横杠不算代码
+          pending = '\u{0}'
           state = InLineComment
           seen_text = true
         } else if lang.slash_block && prev == '/' && ch == '*' {
           // 确认为块注释开头：挂起的斜杠不算代码
-          pending_slash = false
+          pending = '\u{0}'
           state = InBlockComment(1)
           just_opened = true
           seen_text = true
@@ -92,18 +98,21 @@ pub fn count_lines(src : String, lang : Lang) -> Stats {
           state = InLineComment
           seen_text = true
         } else if in_array_char(lang.string_delims, ch) {
-          if pending_slash {
-            pending_slash = false
+          if pending != '\u{0}' {
+            pending = '\u{0}'
             seen_code = true
           }
           state = InString(ch)
           seen_code = true
         } else if ch == '/' && (lang.slash_line || lang.slash_block) {
           // 可能是注释开头的第一个斜杠，先挂起
-          pending_slash = true
+          pending = '/'
+        } else if ch == '-' && lang.dash_line {
+          // 可能是注释开头的第一个横杠，先挂起
+          pending = '-'
         } else {
-          if pending_slash {
-            pending_slash = false
+          if pending != '\u{0}' {
+            pending = '\u{0}'
             seen_code = true
           }
           seen_code = true
@@ -149,8 +158,8 @@ pub fn count_lines(src : String, lang : Lang) -> Stats {
     prev = ch
   }
   if has_any {
-    if pending_slash {
-      pending_slash = false
+    if pending != '\u{0}' {
+      pending = '\u{0}'
       seen_code = true
     }
     if seen_code {

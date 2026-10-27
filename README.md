@@ -70,6 +70,7 @@ MoonBit: code/comment/blank/total
 |---|---|
 | `//` 行注释 + `/* */` 块注释 | MoonBit、C/C++、Java、Go、Rust、JS/TS、Kotlin、Swift、CSS 等 |
 | `#` 行注释 | Python、Shell、Ruby、YAML、TOML 等 |
+| `--` 行注释 + `/* */` 块注释 | SQL |
 | 无注释 | JSON |
 
 自定义语言只需构造一个 `Lang` 结构（开关式规则 + 字符串界定符），无需改扫描器。

@@ -7,6 +7,7 @@ test "count_lines: 块注释嵌套（可配置）" {
     exts: [],
     slash_line: false,
     hash_line: false,
+    dash_line: false,
     slash_block: true,
     nested_block: true,
     string_delims: [],
