@@ -114,6 +114,15 @@ test "count_lines: 空输入" {
 }
 
 ///|
+test "count_lines: UTF-8 BOM 兼容" {
+  let s = @lib.count_lines("\u{FEFF}let a = 1\n// note", @lib.moonbit())
+  assert_eq(s.code, 1)
+  assert_eq(s.comment, 1)
+  let only_bom = @lib.count_lines("\u{FEFF}", @lib.moonbit())
+  assert_eq(only_bom.total, 0)
+}
+
+///|
 test "count_lines: 末行无换行符" {
   let s = @lib.count_lines("let a = 1", @lib.moonbit())
   assert_eq(s.code, 1)

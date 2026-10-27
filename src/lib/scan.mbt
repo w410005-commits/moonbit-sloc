@@ -47,7 +47,15 @@ pub fn count_lines(src : String, lang : Lang) -> Stats {
   // 先不判定为代码，待下一个字符确认它是注释开头，还是普通运算符（除法/减法）。
   // 取值为 '\u{0}'（无挂起）、'/' 或 '-'。
   let mut pending : Char = '\u{0}'
+  let mut first = true
   for ch in src {
+    // 跳过文件开头的 UTF-8 BOM（U+FEFF），它不属于任何行，
+    // 否则记事本等工具保存的带 BOM 文件会把首行统计错。
+    if first && ch == '\u{FEFF}' {
+      first = false
+      continue
+    }
+    first = false
     has_any = true
     if ch == '\n' {
       if pending != '\u{0}' {
