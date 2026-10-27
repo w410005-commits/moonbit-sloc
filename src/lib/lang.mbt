@@ -14,6 +14,8 @@ pub struct Lang {
   slash_line : Bool
   /// 是否支持 "#" 行注释（Python、Shell、Ruby、YAML、TOML 等）
   hash_line : Bool
+  /// 是否支持 "--" 行注释（SQL、Lua、Haskell 等）
+  dash_line : Bool
   /// 是否支持 "/* ... */" 块注释（MoonBit、C 家族、CSS 等）
   slash_block : Bool
   /// 块注释是否支持嵌套（Rust 风格）
@@ -30,6 +32,7 @@ pub fn moonbit() -> Lang {
     exts: ["mbt"],
     slash_line: true,
     hash_line: false,
+    dash_line: false,
     slash_block: true,
     nested_block: false,
     string_delims: ['"', '\'', '`'],
@@ -48,6 +51,7 @@ pub fn c_like() -> Lang {
     ],
     slash_line: true,
     hash_line: true,
+    dash_line: false,
     slash_block: true,
     nested_block: false,
     string_delims: ['"', '\'', '`'],
@@ -62,9 +66,25 @@ pub fn hash_like() -> Lang {
     exts: ["py", "pyw", "rb", "sh", "bash", "zsh", "yml", "yaml", "toml"],
     slash_line: false,
     hash_line: true,
+    dash_line: false,
     slash_block: false,
     nested_block: false,
     string_delims: ['"', '\''],
+  }
+}
+
+///|
+///SQL 语言规则："--" 行注释 + "/* ... */" 块注释，字符串为单引号。
+pub fn sql_lang() -> Lang {
+  Lang::{
+    name: "SQL",
+    exts: ["sql"],
+    slash_line: false,
+    hash_line: false,
+    dash_line: true,
+    slash_block: true,
+    nested_block: false,
+    string_delims: ['\''],
   }
 }
 
@@ -76,6 +96,7 @@ pub fn json_lang() -> Lang {
     exts: ["json"],
     slash_line: false,
     hash_line: false,
+    dash_line: false,
     slash_block: false,
     nested_block: false,
     string_delims: ['"'],
@@ -85,7 +106,7 @@ pub fn json_lang() -> Lang {
 ///|
 ///内置语言表。
 pub fn builtin_langs() -> Array[Lang] {
-  [moonbit(), c_like(), hash_like(), json_lang()]
+  [moonbit(), c_like(), hash_like(), sql_lang(), json_lang()]
 }
 
 ///|
