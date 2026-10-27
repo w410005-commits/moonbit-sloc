@@ -182,6 +182,16 @@ pub fn count_lines(src : String, lang : Lang) -> Stats {
 }
 
 ///|
+///按路径扩展名自动识别语言并统计行构成，
+///适合批量处理文件的场景；未注册的扩展名返回 `None`。
+pub fn count_lines_auto(src : String, path : String) -> Stats? {
+  match detect_ext(path) {
+    None => None
+    Some(lang) => Some(count_lines(src, lang))
+  }
+}
+
+///|
 ///判断字符是否在数组中。
 fn in_array_char(arr : Array[Char], c : Char) -> Bool {
   for x in arr {

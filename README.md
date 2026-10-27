@@ -33,6 +33,9 @@ println(stats.total)    // 总行数
 //序列化为 JSON，供 CI / 工具链消费
 let json = @sloc.stats_to_json(stats)
 
+//按扩展名自动识别语言并统计（未识别返回 None）
+let auto = @sloc.count_lines_auto(src, "app.py")
+
 //按扩展名自动识别语言
 let lang = @sloc.detect_ext("src/main.mbt") // Some(MoonBit)
 

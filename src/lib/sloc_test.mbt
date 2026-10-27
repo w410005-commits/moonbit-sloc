@@ -192,3 +192,18 @@ test "stats_to_json: 序列化" {
   let j = @lib.stats_to_json(s)
   assert_eq(j, "{ \"code\": 1, \"comment\": 0, \"blank\": 0, \"total\": 1 }")
 }
+
+///|
+test "count_lines_auto: 按扩展名自动统计" {
+  match @lib.count_lines_auto("# hi\nx = 1", "a.toml") {
+    Some(v) => {
+      assert_eq(v.code, 1)
+      assert_eq(v.comment, 1)
+    }
+    None => assert_true(false)
+  }
+  match @lib.count_lines_auto("plain", "a.unknown") {
+    Some(_) => assert_true(false)
+    None => assert_true(true)
+  }
+}
