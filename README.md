@@ -80,7 +80,12 @@ MoonBit: code/comment/blank/total
 | `--` 行注释 + `/* */` 块注释 | SQL |
 | 无注释 | JSON |
 
-自定义语言只需构造一个 `Lang` 结构（开关式规则 + 字符串界定符），无需改扫描器。
+自定义语言规则用 `make_lang` 构造（`Lang` 为只读结构，外部包通过它定义预置表之外的规则）：
+
+```moonbit
+let dsl = @sloc.make_lang("MyDSL", ["dsl"], false, false, true, true, false, ['"'])
+let stats = @sloc.count_lines(src, dsl)
+```
 
 ## 统计口径
 

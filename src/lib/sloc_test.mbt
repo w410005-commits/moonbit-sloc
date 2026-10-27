@@ -207,3 +207,13 @@ test "count_lines_auto: 按扩展名自动统计" {
     None => assert_true(true)
   }
 }
+
+///|
+test "make_lang: 自定义语言规则（外部包视角）" {
+  let lang = @lib.make_lang("MyDSL", ["dsl"], false, false, true, true, false, [
+    '"',
+  ])
+  let s = @lib.count_lines("-- 配置注释\nrun \"x\" -- ok", lang)
+  assert_eq(s.code, 1)
+  assert_eq(s.comment, 1)
+}

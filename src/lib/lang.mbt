@@ -104,6 +104,33 @@ pub fn json_lang() -> Lang {
 }
 
 ///|
+///构造自定义语言规则。
+///
+///`Lang` 是只读结构，只能在定义包内部构造字面量；
+///其他包需要定义预置语言表之外的规则时，请使用本函数。
+pub fn make_lang(
+  name : String,
+  exts : Array[String],
+  slash_line : Bool,
+  hash_line : Bool,
+  dash_line : Bool,
+  slash_block : Bool,
+  nested_block : Bool,
+  string_delims : Array[Char],
+) -> Lang {
+  Lang::{
+    name,
+    exts,
+    slash_line,
+    hash_line,
+    dash_line,
+    slash_block,
+    nested_block,
+    string_delims,
+  }
+}
+
+///|
 ///内置语言表。
 pub fn builtin_langs() -> Array[Lang] {
   [moonbit(), c_like(), hash_like(), sql_lang(), json_lang()]
