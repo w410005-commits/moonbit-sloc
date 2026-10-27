@@ -1,0 +1,5 @@
+import {
+  "w410005-commits/moonbit-sloc/src/lib",
+}
+
+pkgtype(kind: "executable")
